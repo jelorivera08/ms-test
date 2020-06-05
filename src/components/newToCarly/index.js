@@ -1,7 +1,8 @@
+import "./index.css";
 import React, { useState } from "react";
 import GoogleLogin from "react-google-login";
-import FacebookLogin from "react-facebook-login";
-import { Divider, Input, Button } from "semantic-ui-react";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import { Divider, Input, Button, Icon } from "semantic-ui-react";
 import axios from "axios";
 import { API } from "./constants";
 
@@ -66,30 +67,37 @@ export default ({ setTabIndex }) => {
   return (
     <div>
       <div>
-        <div className="text-left text-xl font-bold">Sign in with </div>
-        <GoogleLogin
-          className="w-full justify-center my-4"
-          clientId="700376790680-v5ddllfdo7liiat17s5sv7dg5l910bud.apps.googleusercontent.com"
-          buttonText="Login"
-          onSuccess={responseGoogle}
-          cookiePolicy={"single_host_origin"}
-        />
-        <div>
+        <div className="text-left text-xl font-bold">Continue with... </div>
+
+        <div className="flex justify-between mt-4">
           <FacebookLogin
-            icon="fa-facebook"
             appId="254072025818553"
-            textButton={<div className="ml-4 capitalize">Login</div>}
-            buttonStyle={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-            }}
             disableMobileRedirect={true}
             fields="name,email,picture"
             callback={responseFacebook}
+            render={(renderProps) => (
+              <button
+                className="fb-button flex px-4 py-4 align-center w-1/2 justify-center mr-2 border border-gray-500"
+                style={{ height: "2.5rem" }}
+                onClick={renderProps.onClick}
+              >
+                <div>
+                  <Icon name="facebook" color="blue" />
+                </div>
+                <div className="ml-2 font-bold text-black">FACEBOOK</div>
+              </button>
+            )}
+          />
+
+          <GoogleLogin
+            className="w-1/2 ml-2 justify-center font-bold border border-gray-500"
+            clientId="700376790680-v5ddllfdo7liiat17s5sv7dg5l910bud.apps.googleusercontent.com"
+            buttonText={<div className="font-bold text-black"> GOOGLE</div>}
+            onSuccess={responseGoogle}
+            cookiePolicy={"single_host_origin"}
           />
         </div>
-        <div className="text-gray-500 text-xs mt-4">
+        <div className="text-gray-600 text-left text-sm mt-4">
           We will never share any of your data or post anything on your behalf
         </div>
         <Divider />
@@ -108,12 +116,11 @@ export default ({ setTabIndex }) => {
                 })
               }
               className="w-full"
-              placeholder="Email"
             />
           </div>
 
           <div className="text-left mt-2">
-            <div className="my-2">Password</div>
+            <div className="my-2">Create password</div>
             <Input
               onChange={(e, { value }) =>
                 setCredentials({
@@ -123,7 +130,6 @@ export default ({ setTabIndex }) => {
               }
               className="w-full"
               type="password"
-              placeholder="*********"
             />
           </div>
 
@@ -133,7 +139,7 @@ export default ({ setTabIndex }) => {
             </div>
           )}
 
-          <div className="text-gray-500 text-justify text-xs mt-2">
+          <div className="text-gray-700 text-justify text-xs my-8">
             By signing up, you agree to Carly's website{" "}
             <span
               onClick={() => alert("Terms & Conditions")}
